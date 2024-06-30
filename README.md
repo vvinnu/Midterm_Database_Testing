@@ -137,3 +137,55 @@ CREATE TABLE Orders (
 );
 ```
 
+## DDL statements for Customers Table
+
+### To create table
+
+```sql
+CREATE TABLE Customers (
+    customer_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    customer_email VARCHAR(255) UNIQUE,
+    total_amount_spent DECIMAL(10, 2),
+    date_joined DATE
+
+);
+```
+
+### To Modify an existing column
+
+```sql
+ALTER TABLE Customers MODIFY COLUMN first_name VARCHAR(500);
+```
+
+### To Add a new column
+
+```sql
+ALTER TABLE Customers ADD alternate_email VARCHAR(255);
+```
+
+### Deleting a column
+
+```sql
+ALTER TABLE Customers DROP COLUMN alternate_email;
+```
+
+### Deleting a table
+
+```sql
+DROP TABLE Customers;
+```
+
+### Deleting all the data(rows) in a table
+
+```sql
+TRUNCATE TABLE Customers;
+```
+
+### Renaming a table name
+
+```sql
+RENAME TABLE Customers TO Customer_Details ;
+```
+
