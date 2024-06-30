@@ -189,3 +189,33 @@ TRUNCATE TABLE Customers;
 RENAME TABLE Customers TO Customer_Details ;
 ```
 
+
+## DML queries for Customers Table
+
+### Inserting data into customers table
+```sql
+INSERT INTO Customers (first_name, last_name, customer_email, total_amount_spent, date_joined)
+VALUES
+    ('Vineeth', 'Kanoor', 'vineethkanoor@gmail.com', 500.25, '2015-01-01'),
+    ('Reshma', 'Reddy', 'reshureddy@gmail.com', 1200, '2022-12-12'),
+    ('Ashlin', 'Michael', 'ashlinmichael@gmail.com', 800, '2022-11-30');
+```
+
+### Reading the data from customers table
+
+```sql
+SELECT * FROM customers;
+```
+
+### Updating a particular field in the table
+
+```sql
+UPDATE customers SET total_amount_spent = 5000.00 WHERE customer_id = 3;
+```
+
+### Deleting a row from the table
+
+```sql
+DELETE FROM customers WHERE customer_id = 3;
+```
+
