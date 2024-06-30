@@ -73,3 +73,67 @@ Authors, Publishers, Customers, Books, Reviews and Orders
 | order_amount    | DECIMAL       | Total amount of the customer purchase |
 | order_quantity  | INT           | No of books ordered                   |
 
+
+## SQL code for creating the tables we defined above
+
+```sql
+CREATE TABLE Authors (
+    author_id SERIAL PRIMARY KEY,
+    author_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Publishers (
+    publisher_id SERIAL PRIMARY KEY,
+    publisher_name VARCHAR(100) NOT NULL,
+    publisher_email VARCHAR(255),
+    publisher_address VARCHAR(255)
+);
+
+CREATE TABLE Customers (
+    customer_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    customer_email VARCHAR(255) UNIQUE,
+    total_amount_spent DECIMAL(10, 2),
+    date_joined DATE
+
+);
+
+CREATE TABLE Books (
+    book_id SERIAL PRIMARY KEY,
+    book_name VARCHAR(255) NOT NULL,
+    book_genre VARCHAR(100),
+    book_type VARCHAR(50),
+    book_publication_date DATE,
+    book_publisher_id INT,
+    book_author_id INT,
+    book_language VARCHAR(50),
+    book_average_rating FLOAT,
+    book_price DECIMAL(10, 2),
+    FOREIGN KEY (book_publisher_id) REFERENCES Publishers(publisher_id),
+    FOREIGN KEY (book_author_id) REFERENCES Authors(author_id)
+);
+
+CREATE TABLE Reviews (
+    review_id SERIAL PRIMARY KEY,
+    customer_id INT,
+    book_id INT,
+    rating INT,
+    review_text TEXT,
+    review_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id),
+    FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
+
+CREATE TABLE Orders (
+    order_id SERIAL PRIMARY KEY,
+    order_date DATE,
+    customer_id INT,
+    book_id INT,
+    order_amount DECIMAL(10, 2),
+    order_quantity INT,
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id),
+    FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
+```
+
