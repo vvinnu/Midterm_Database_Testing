@@ -219,3 +219,44 @@ UPDATE customers SET total_amount_spent = 5000.00 WHERE customer_id = 3;
 DELETE FROM customers WHERE customer_id = 3;
 ```
 
+## SQL Queries for Requirements Listed in the Assignment
+
+
+### Power writers (authors) with more than X books in the same genre published within the last X years
+
+```sql
+SELECT author_id, author_name FROM Authors
+WHERE author_id IN (
+    SELECT book_author_id FROM Books
+    WHERE book_genre = 'Fiction' AND book_publication_date >= CURRENT_DATE - INTERVAL '5 YEAR'
+    GROUP BY book_author_id HAVING COUNT(*) > 1
+);
+
+```
+
+### Loyal Customers who has spent more than X dollars in the last year
+
+```sql
+SELECT customer_id, first_name, last_name FROM customers
+WHERE total_amount_spent > 500 AND DATE_PART('year', CURRENT_DATE) - DATE_PART('year', date_joined) = 1;
+```
+
+
+### Well Reviewed books that has a better user rating than average
+```sql
+SELECT book_id, book_name FROM books
+WHERE book_average_rating > ( SELECT AVG(rating) FROM reviews);
+```
+
+### The most popular genre by sales 
+Here we are using the order quantity of the books to determine which generates high sales
+```sql
+SELECT book_genre FROM Books
+JOIN Orders ON Books.book_id = Orders.book_id GROUP BY book_genre
+ORDER BY SUM(Orders.order_quantity) DESC;
+```
+
+### The 10 most recent posted reviews by Customers
+```sql
+SELECT * FROM Reviews ORDER BY review_date DESC LIMIT 10;
+```
