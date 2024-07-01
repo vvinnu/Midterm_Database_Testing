@@ -290,7 +290,7 @@ async function createCustomer(customer: Customer): Promise<void> {
         );
         console.log(`Customer created successfully.`);
     } catch (error) {
-        console.error('Unable ');
+        console.error('Unable to create the customer record ');
     }
 }
 
