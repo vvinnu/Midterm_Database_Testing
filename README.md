@@ -183,12 +183,6 @@ DROP TABLE Customers;
 TRUNCATE TABLE Customers;
 ```
 
-### Renaming a table name
-
-```sql
-RENAME TABLE Customers TO Customer_Details ;
-```
-
 
 ## DML queries for Customers Table
 
@@ -259,4 +253,103 @@ ORDER BY SUM(Orders.order_quantity) DESC;
 ### The 10 most recent posted reviews by Customers
 ```sql
 SELECT * FROM Reviews ORDER BY review_date DESC LIMIT 10;
+```
+
+## TypeScript Interface with all the CRUD operations
+
+
+```typescript
+// customers.ts
+
+import { Pool } from 'pg';
+
+const pool = new Pool({
+    user: 'postgres',
+    host: 'db',
+    database: 'Online_Book_Store',
+    password: 'password',
+    port: 5432,
+});
+
+interface Customer {
+    customer_id: number;
+    first_name: string;
+    last_name: string;
+    customer_email: string;
+    total_amount_spent: number;
+    date_joined: Date;
+}
+
+async function createCustomer(customer: Customer): Promise<void> {
+    const { first_name, last_name, customer_email, total_amount_spent, date_joined } = customer;
+    try {
+        await pool.query(
+            `INSERT INTO Customers (first_name, last_name, customer_email, total_amount_spent, date_joined)
+             VALUES ($1, $2, $3, $4, $5)`,
+            [first_name, last_name, customer_email, total_amount_spent, date_joined]
+        );
+        console.log(`Customer created successfully.`);
+    } catch (error) {
+        console.error('Unable ');
+    }
+}
+
+async function readCustomer(customer_id: number): Promise<void> {
+    try {
+        const result = await pool.query(`SELECT * FROM Customers WHERE customer_id = $1`, [customer_id]);
+        if (result.rows.length > 0) {
+            console.log('Customer found:', result.rows[0]);
+        } else {
+            console.log('Customer not found.');
+        }
+    } catch (error) {
+        console.error('Unable to read the table');
+    }
+}
+
+async function updateCustomer(customer_id: number, customer: Partial<Customer>): Promise<void> {
+    const { first_name, last_name, customer_email, total_amount_spent, date_joined } = customer;
+    try {
+        await pool.query(
+            `UPDATE Customers SET
+                first_name = COALESCE($1, first_name),
+                last_name = COALESCE($2, last_name),
+                customer_email = COALESCE($3, customer_email),
+                total_amount_spent = COALESCE($4, total_amount_spent),
+                date_joined = COALESCE($5, date_joined)
+             WHERE customer_id = $6`,
+            [first_name, last_name, customer_email, total_amount_spent, date_joined, customer_id]
+        );
+        console.log(`Customer updated successfully.`);
+    } catch (error) {
+        console.error('Unable to update the record');
+    }
+}
+
+async function deleteCustomer(customer_id: number): Promise<void> {
+    try {
+        await pool.query(`DELETE FROM Customers WHERE customer_id = $1`, [customer_id]);
+        console.log(`Customer deleted successfully.`);
+    } catch (error) {
+        console.error('Unable to delete the record');
+    }
+}
+
+(async () => {
+    const newCustomer: Customer = {
+        first_name: 'Narendra',
+        last_name: 'Modi',
+        customer_email: 'narendramodi@gmail.com',
+        total_amount_spent: 100.50,
+        date_joined: new Date()
+    };
+
+    await createCustomer(newCustomer);
+
+    await readCustomer(1);
+
+    await updateCustomer(1, { total_amount_spent: 150.75 });
+
+    await deleteCustomer(1);
+})();
 ```
